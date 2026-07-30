@@ -3,6 +3,18 @@
 // A déployer dans un projet Vercel séparé, dédié uniquement à ce webhook.
 
 export default async function handler(req: any, res: any) {
+  // Headers CORS : indispensables car Ringover appelle cet endpoint
+  // directement depuis le navigateur (app.ringover.com), pas serveur-à-serveur.
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Le navigateur envoie d'abord une requête OPTIONS ("preflight") avant la vraie requête.
+  // Il faut y répondre 200 immédiatement, sans autre traitement.
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   if (req.method !== "POST") {
     return res.status(200).json({ status: true, data: { message: "OK - endpoint actif" } });
   }

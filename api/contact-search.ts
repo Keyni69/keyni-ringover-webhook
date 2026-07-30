@@ -20,10 +20,13 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    // LOG TEMPORAIRE : pour voir le format exact envoyé par Ringover
+    console.log("BODY REÇU:", JSON.stringify(req.body));
+
     const from: string | undefined = req.body?.from;
 
     if (!from) {
-      return res.status(400).json({ status: false });
+      return res.status(400).json({ status: false, debug_body_received: req.body });
     }
 
     const numeroModulr = toModulrFormat(from);
